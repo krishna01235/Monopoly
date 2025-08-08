@@ -1,0 +1,21 @@
+.luxury-tax-cmp {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+
+  .containerr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .logoo {
+      margin-top: 10px;
+      width: 25px;
+      height: 25px;
+      background-color: black;
+      border-radius: 5px;
+      transform: rotate(45deg);
+    }
+  }
+}

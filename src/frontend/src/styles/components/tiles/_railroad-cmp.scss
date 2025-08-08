@@ -1,0 +1,19 @@
+.railroad-cmp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  text-align: center;
+
+  .tz {
+    display: flex;
+    flex-direction: column;
+
+    .drawing {
+      margin-top: 20px;
+      font-size: 25px;
+    }
+  }
+  p {
+  }
+}

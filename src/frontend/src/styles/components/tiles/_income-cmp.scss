@@ -1,0 +1,10 @@
+.income-cmp {
+  position: relative;
+  p {
+    text-align: center;
+
+    &:nth-child(1) {
+      margin-bottom: 5px;
+    }
+  }
+}

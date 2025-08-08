@@ -1,0 +1,13 @@
+.electric-cmp {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  position: relative;
+  text-align: center;
+
+  .electric-logo {
+    margin-top: 10px;
+    font-size: 30px;
+    color: rgb(182, 165, 32);
+  }
+}

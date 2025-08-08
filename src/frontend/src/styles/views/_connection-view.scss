@@ -1,0 +1,321 @@
+.connection-view {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.connection-container {
+  width: 100%;
+  max-width: 500px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.connection-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.connection-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+  background-size: 300% 100%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.logo-section {
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.logo-section h1 {
+  color: #333;
+  margin: 0 0 10px 0;
+  font-size: 2.5em;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1em;
+  margin: 0;
+  font-weight: 300;
+}
+
+.connection-status {
+  margin-bottom: 40px;
+}
+
+.loading-section,
+.error-section,
+.metamask-section,
+.network-section,
+.connect-section,
+.success-section {
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.error-section {
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+  border: 2px solid #feb2b2;
+}
+
+.metamask-section {
+  background: linear-gradient(135deg, #fffaf0 0%, #feb2b2 100%);
+  border: 2px solid #feb2b2;
+}
+
+.network-section {
+  background: linear-gradient(135deg, #f0fff4 0%, #9ae6b4 100%);
+  border: 2px solid #9ae6b4;
+}
+
+.connect-section {
+  background: linear-gradient(135deg, #f0f8ff 0%, #90cdf4 100%);
+  border: 2px solid #90cdf4;
+}
+
+.success-section {
+  background: linear-gradient(135deg, #f0fff4 0%, #68d391 100%);
+  border: 2px solid #68d391;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-icon,
+.metamask-icon,
+.network-icon,
+.wallet-icon,
+.success-icon {
+  font-size: 3em;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+h3 {
+  color: #333;
+  margin: 0 0 15px 0;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+p {
+  color: #666;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  font-size: 1em;
+}
+
+.account-info,
+.network-info {
+  background: rgba(248, 249, 250, 0.8);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  border: 1px solid #e9ecef;
+}
+
+.connect-btn,
+.switch-btn,
+.retry-btn,
+.install-btn,
+.start-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.connect-btn::before,
+.switch-btn::before,
+.retry-btn::before,
+.install-btn::before,
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.connect-btn:hover::before,
+.switch-btn:hover::before,
+.retry-btn:hover::before,
+.install-btn:hover::before,
+.start-btn:hover::before {
+  left: 100%;
+}
+
+.connect-btn:hover,
+.switch-btn:hover,
+.retry-btn:hover,
+.install-btn:hover,
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.switch-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.info-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 25px;
+  border-radius: 15px;
+  text-align: left;
+  border: 1px solid #dee2e6;
+}
+
+.info-section h4 {
+  color: #333;
+  margin: 0 0 15px 0;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-section li {
+  color: #666;
+  margin: 8px 0;
+  padding: 8px 0;
+  font-size: 1em;
+  border-bottom: 1px solid #e9ecef;
+  transition: color 0.3s ease;
+}
+
+.info-section li:hover {
+  color: #333;
+}
+
+.info-section li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 600px) {
+  .connection-card {
+    padding: 30px 20px;
+  }
+  
+  .logo-section h1 {
+    font-size: 2em;
+  }
+  
+  .connect-btn,
+  .switch-btn,
+  .retry-btn,
+  .install-btn,
+  .start-btn {
+    padding: 12px 25px;
+    font-size: 1em;
+  }
+  
+  .error-icon,
+  .metamask-icon,
+  .network-icon,
+  .wallet-icon,
+  .success-icon {
+    font-size: 2.5em;
+  }
+}

@@ -1,0 +1,15 @@
+.water-work-cmp {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+
+  .containerr {
+    .drawing {
+      margin-top: 20px;
+      font-size: 35px;
+      color: #5a6dba;
+    }
+  }
+}

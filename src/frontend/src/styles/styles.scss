@@ -1,0 +1,48 @@
+// // BASICS
+@import 'basics/helpers';
+@import 'basics/base';
+
+// // COMPONENTS
+
+@import './components/player-review-cmp';
+@import './components/players-list-cmp';
+// TILES
+@import './components/tiles/water-work-cmp';
+@import './components/tiles/community-cmp';
+@import './components/tiles/tile-cmp';
+@import './components/tiles/start-cmp';
+@import './components/tiles/send-to-jail-cmp';
+@import './components/tiles/railroad-cmp';
+@import './components/tiles/parking-cmp';
+@import './components/tiles/luxury-tax-cmp';
+@import './components/tiles/chancee-cmp';
+@import './components/tiles/electric-cmp';
+@import './components/tiles/income-cmp';
+@import './components/tiles/jail-cmp';
+@import './components/tiles/dice-cmp';
+
+// MODALS
+@import './components/modals/property-card-modal.scss';
+@import './components/modals/community-chest-modal.scss';
+@import './components/modals/chance-modal.scss';
+@import './components/modals/modals-cmps.scss';
+@import './components/modals/railroad-card-modal';
+@import './components/modals/buy-house-modal';
+@import './components/modals/utility-card-modal';
+@import './components/modals/msg-modal';
+@import './components/modals/jail-out-modal';
+// CARDS
+@import './components/cards/property-card';
+@import './components/cards/utilitie-card';
+@import './components/cards/reading-railroad-card';
+@import './components/cards/community-chest-card';
+@import './components/cards/chance-card';
+
+// // VIEWS
+@import './views/board-view';
+@import './views/home-view';
+@import './views/player-view';
+
+// TYPOGRAPHY
+@import './setup/typography.scss';
+@import './setup/vars.scss';

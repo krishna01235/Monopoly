@@ -1,0 +1,27 @@
+{
+  "name": "hardhat-project",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "hardhat:deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "hardhat:deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:monopoly": "npx hardhat run scripts/deploy-monopoly.js --network monad-testnet",
+    "deploy:monopoly:local": "npx hardhat run scripts/deploy-monopoly.js --network localhost",
+    "test:monopoly": "npx hardhat test test/Monopoly.test.js",
+    "setup:contract": "node scripts/setup-contract.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.19"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "next": "^15.2.2",
+    "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
+    "react-dom": "^19.0.0"
+  }
+}
