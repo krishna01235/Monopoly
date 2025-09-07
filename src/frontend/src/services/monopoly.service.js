@@ -1,28 +1,10 @@
 import { ethers } from 'ethers';
+import monopolyAddress from '../contract_data/Monopoly-address.json';
+import monopolyArtifact from '../contract_data/Monopoly.json';
 
-// Load contract artifacts
-let MONOPOLY_ABI = null;
-let MONOPOLY_CONTRACT_ADDRESS = null;
-
-// Function to load contract artifacts
-async function loadContractArtifacts() {
-  try {
-    // Load contract address
-    const addressResponse = await fetch('/src/contract_data/Monopoly-address.json');
-    const addressData = await addressResponse.json();
-    MONOPOLY_CONTRACT_ADDRESS = addressData.address;
-    
-    // Load contract ABI
-    const abiResponse = await fetch('/src/contract_data/Monopoly.json');
-    const abiData = await abiResponse.json();
-    MONOPOLY_ABI = abiData.abi;
-    
-    console.log('Monopoly contract artifacts loaded successfully');
-  } catch (error) {
-    console.error('Error loading contract artifacts:', error);
-    throw new Error('Failed to load contract artifacts. Please ensure the contract is deployed.');
-  }
-}
+// Load contract artifacts (bundled by Vite)
+let MONOPOLY_ABI = monopolyArtifact?.abi || null;
+let MONOPOLY_CONTRACT_ADDRESS = monopolyAddress?.address || null;
 
 export async function setContractAddress(address) {
   MONOPOLY_CONTRACT_ADDRESS = address;
@@ -37,9 +19,9 @@ export async function getMonopolyContract() {
     throw new Error('MetaMask not available');
   }
   
-  // Load contract artifacts if not already loaded
+  // Ensure artifacts are present
   if (!MONOPOLY_CONTRACT_ADDRESS || !MONOPOLY_ABI) {
-    await loadContractArtifacts();
+    throw new Error('Contract artifacts not available');
   }
   
   if (!MONOPOLY_CONTRACT_ADDRESS) {
@@ -55,55 +37,38 @@ export async function startNewGame(playerCount) {
   try {
     const contract = await getMonopolyContract();
     
-    // Get the actual entry fee from the contract
+    // Detect contract API by attempting view calls
+    let isNewApi = false;
+    let totalFee;
     let feePerPlayer;
-    if (contract.ENTRY_FEE) {
-      feePerPlayer = await contract.ENTRY_FEE();
-      console.log(`Contract entry fee: ${ethers.formatEther(feePerPlayer)} MONAD`);
-    } else {
-      // Fallback to 0.05 MONAD if ENTRY_FEE not available
-      feePerPlayer = ethers.parseEther("0.05");
-      console.log(`Using fallback entry fee: ${ethers.formatEther(feePerPlayer)} MONAD`);
+
+    try {
+      const computedFee = await contract.getGameFee(playerCount);
+      totalFee = computedFee;
+      isNewApi = true;
+      console.log(`Detected new API. Total fee for ${playerCount} players: ${ethers.formatEther(totalFee)} MONAD`);
+    } catch (_) {
+      // Fallback: old contract path using ENTRY_FEE
+      try {
+        feePerPlayer = await contract.ENTRY_FEE();
+        console.log(`Detected old API. ENTRY_FEE: ${ethers.formatEther(feePerPlayer)} MONAD`);
+      } catch (_) {
+        feePerPlayer = ethers.parseEther("0.05");
+        console.log(`Using fallback entry fee: ${ethers.formatEther(feePerPlayer)} MONAD`);
+      }
     }
-    
-    const totalFee = feePerPlayer * BigInt(playerCount);
-    
-    console.log(`Starting new game with ${playerCount} players. Fee: ${ethers.formatEther(totalFee)} MONAD`);
-    
-    // Check if the contract has the startNewGame function
-    if (contract.startNewGame) {
-      // Call the startNewGame function (our new contract)
+
+    if (isNewApi) {
       const tx = await contract.startNewGame(playerCount, { value: totalFee });
       const receipt = await tx.wait();
-      
-      console.log('Game started successfully! Transaction hash:', receipt.hash);
-      
-      return {
-        success: true,
-        transactionHash: receipt.hash,
-        fee: ethers.formatEther(totalFee)
-      };
-    } else if (contract.createGame) {
-      // Use the existing createGame function (current contract)
-      // The createGame function expects maxPlayers, not current player count
-      const maxPlayers = playerCount; // Use current player count as max players
-      
-      // Try sending just the single entry fee (0.05 MONAD)
-      console.log(`Sending single entry fee: ${ethers.formatEther(feePerPlayer)} MONAD`);
-      
-      const tx = await contract.createGame(maxPlayers, { value: feePerPlayer });
-      const receipt = await tx.wait();
-      
-      console.log('Game created successfully! Transaction hash:', receipt.hash);
-      
-      return {
-        success: true,
-        transactionHash: receipt.hash,
-        fee: ethers.formatEther(feePerPlayer)
-      };
-    } else {
-      throw new Error('Contract does not have startNewGame or createGame function. Please deploy the correct contract.');
+      return { success: true, transactionHash: receipt.hash, fee: ethers.formatEther(totalFee) };
     }
+
+    // Old API flow: createGame expects a single entry fee value
+    const maxPlayers = playerCount;
+    const tx = await contract.createGame(maxPlayers, { value: feePerPlayer });
+    const receipt = await tx.wait();
+    return { success: true, transactionHash: receipt.hash, fee: ethers.formatEther(feePerPlayer) };
   } catch (error) {
     console.error('Error starting new game:', error);
     throw error;
@@ -113,21 +78,19 @@ export async function startNewGame(playerCount) {
 export async function getGameFee(playerCount) {
   try {
     const contract = await getMonopolyContract();
-    
-    // Check if the contract has the getGameFee function
-    if (contract.getGameFee) {
+    try {
       const fee = await contract.getGameFee(playerCount);
       return ethers.formatEther(fee);
-    } else if (contract.ENTRY_FEE) {
-      // Use the ENTRY_FEE constant from the existing contract
-      const entryFee = await contract.ENTRY_FEE();
-      const totalFee = entryFee * BigInt(playerCount);
-      return ethers.formatEther(totalFee);
-    } else {
-      // Fallback to hardcoded calculation
-      const feePerPlayer = ethers.parseEther("0.05");
-      const totalFee = feePerPlayer * BigInt(playerCount);
-      return ethers.formatEther(totalFee);
+    } catch (_) {
+      try {
+        const entryFee = await contract.ENTRY_FEE();
+        const totalFee = entryFee * BigInt(playerCount);
+        return ethers.formatEther(totalFee);
+      } catch (_) {
+        const feePerPlayer = ethers.parseEther("0.05");
+        const totalFee = feePerPlayer * BigInt(playerCount);
+        return ethers.formatEther(totalFee);
+      }
     }
   } catch (error) {
     console.error('Error getting game fee:', error);
@@ -141,8 +104,20 @@ export async function getGameFee(playerCount) {
 export async function checkCorrectFee(playerCount, sentAmount) {
   try {
     const contract = await getMonopolyContract();
-    const isCorrect = await contract.isCorrectFee(playerCount, sentAmount);
-    return isCorrect;
+    try {
+      const isCorrect = await contract.isCorrectFee(playerCount, sentAmount);
+      return isCorrect;
+    } catch (_) {
+      // Old API: compute locally using ENTRY_FEE
+      let entryFee;
+      try {
+        entryFee = await contract.ENTRY_FEE();
+      } catch (_) {
+        entryFee = ethers.parseEther("0.05");
+      }
+      const expected = entryFee * BigInt(playerCount);
+      return expected === sentAmount;
+    }
   } catch (error) {
     console.error('Error checking fee:', error);
     throw error;
@@ -152,8 +127,13 @@ export async function checkCorrectFee(playerCount, sentAmount) {
 export async function getUserGameFees(userAddress) {
   try {
     const contract = await getMonopolyContract();
-    const fees = await contract.gameFees(userAddress);
-    return ethers.formatEther(fees);
+    try {
+      const fees = await contract.gameFees(userAddress);
+      return ethers.formatEther(fees);
+    } catch (_) {
+      // Old API likely does not track this mapping
+      return '0.0';
+    }
   } catch (error) {
     console.error('Error getting user game fees:', error);
     throw error;
